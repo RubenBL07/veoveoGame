@@ -1,0 +1,181 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    --background: 220 13% 9%;
+    --foreground: 0 0% 98%;
+
+    --card: 222 13% 11%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 222 13% 11%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 142 84% 55%;
+    --primary-foreground: 220 13% 9%;
+
+    --secondary: 60 100% 65%;
+    --secondary-foreground: 220 13% 9%;
+
+    --muted: 217 13% 13%;
+    --muted-foreground: 217 10% 64%;
+
+    --accent: 325 84% 65%;
+    --accent-foreground: 220 13% 9%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 217 13% 15%;
+    --input: 217 13% 15%;
+    --ring: 142 84% 55%;
+
+    --success: 142 84% 55%;
+    --success-foreground: 220 13% 9%;
+
+    --warning: 60 100% 65%;
+    --warning-foreground: 220 13% 9%;
+
+    --info: 200 84% 55%;
+    --info-foreground: 220 13% 9%;
+
+    --vibrant-green: 142 84% 55%;
+    --vibrant-yellow: 60 100% 65%;
+    --vibrant-pink: 325 84% 65%;
+    --vibrant-blue: 200 84% 55%;
+    --vibrant-purple: 270 84% 65%;
+
+    /* Glass effect backgrounds */
+    --glass-bg: 220 13% 9% / 0.8;
+    --glass-border: 0 0% 100% / 0.1;
+
+    /* Additional overlay colors for dialogs */
+    --overlay: 220 13% 9% / 0.9;
+
+    --radius: 1.25rem;
+
+    --sidebar-background: 222 13% 11%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 142 84% 55%;
+    --sidebar-primary-foreground: 220 13% 9%;
+    --sidebar-accent: 217 13% 13%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 217 13% 15%;
+    --sidebar-ring: 142 84% 55%;
+  }
+
+  .dark {
+    --background: 220 13% 9%;
+    --foreground: 0 0% 98%;
+
+    --card: 222 13% 11%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 222 13% 11%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 142 84% 55%;
+    --primary-foreground: 220 13% 9%;
+
+    --secondary: 60 100% 65%;
+    --secondary-foreground: 220 13% 9%;
+
+    --muted: 217 13% 13%;
+    --muted-foreground: 217 10% 64%;
+
+    --accent: 325 84% 65%;
+    --accent-foreground: 220 13% 9%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+
+    --border: 217 13% 15%;
+    --input: 217 13% 15%;
+    --ring: 142 84% 55%;
+
+    --success: 142 84% 55%;
+    --success-foreground: 220 13% 9%;
+
+    --warning: 60 100% 65%;
+    --warning-foreground: 220 13% 9%;
+
+    --info: 200 84% 55%;
+    --info-foreground: 220 13% 9%;
+
+    --vibrant-green: 142 84% 55%;
+    --vibrant-yellow: 60 100% 65%;
+    --vibrant-pink: 325 84% 65%;
+    --vibrant-blue: 200 84% 55%;
+    --vibrant-purple: 270 84% 65%;
+
+    /* Glass effect backgrounds */
+    --glass-bg: 220 13% 9% / 0.8;
+    --glass-border: 0 0% 100% / 0.1;
+
+    /* Additional overlay colors for dialogs */
+    --overlay: 220 13% 9% / 0.9;
+
+    --sidebar-background: 222 13% 11%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 142 84% 55%;
+    --sidebar-primary-foreground: 220 13% 9%;
+    --sidebar-accent: 217 13% 13%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 217 13% 15%;
+    --sidebar-ring: 142 84% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+/* Game specific styles */
+.avatar-initial {
+  @apply w-12 h-12 rounded-2xl bg-primary text-primary-foreground flex items-center justify-center font-bold text-lg;
+}
+
+.game-button {
+  @apply bg-primary hover:bg-primary/90 text-primary-foreground font-bold py-4 px-8 rounded-2xl transition-all duration-300 hover:scale-105 shadow-lg;
+}
+
+.game-card {
+  @apply bg-card border border-border rounded-3xl p-6 shadow-xl backdrop-blur-sm;
+}
+
+.room-code {
+  @apply font-mono text-3xl tracking-wider text-primary-foreground font-black bg-primary px-6 py-4 rounded-2xl shadow-lg;
+}
+
+.glass-card {
+  @apply bg-card/80 backdrop-blur-md border border-border rounded-3xl shadow-2xl;
+}
+
+.vibrant-gradient {
+  @apply bg-gradient-to-br from-primary via-accent to-secondary;
+}
+
+/* Interactive Elements */
+.hover-scale {
+  @apply transition-all duration-300 hover:scale-105 active:scale-95;
+}
+
+.pulse-glow {
+  @apply animate-pulse shadow-lg shadow-primary/20;
+}
+
+.floating-card {
+  @apply transform transition-all duration-500 hover:translate-y-[-8px] hover:shadow-2xl;
+}
