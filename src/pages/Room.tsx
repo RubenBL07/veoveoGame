@@ -10,6 +10,7 @@ import { ArrowLeft, Users, Play, Copy, Crown, Camera, Send } from 'lucide-react'
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 import { Input } from '@/components/ui/input';
+import Chat from '@/components/Chat';
 
 interface Room {
   id: string;
@@ -322,6 +323,17 @@ const Room = () => {
             </div>
           </CardContent>
         </Card>
+
+        {/* Chat */}
+        <div className="mb-6">
+          <Chat 
+            roomId={roomId!} 
+            isGameActive={false}
+            onSendMessage={(message) => {
+              console.log('Message sent:', message);
+            }}
+          />
+        </div>
 
         {/* Actions */}
         {isHost ? (

@@ -1,0 +1,29 @@
+{
+  "buildCommand": "npm run build",
+  "outputDirectory": "dist",
+  "framework": "vite",
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=31536000, immutable"
+        }
+      ]
+    }
+  ],
+  "env": {
+    "VITE_SUPABASE_URL": "https://jfwhgjojlmltcbplnbrm.supabase.co",
+    "VITE_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impmd2hnam9qbG1sdGNicGxuYnJtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2NTk1MzUsImV4cCI6MjA3MDIzNTUzNX0.VFNjEW735pG1iNwQnj5XAQeNvxtxjWBMba7e8VtID-8",
+    "VITE_OPENAI_API_KEY": "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",
+    "VITE_GOOGLE_ANALYTICS_ID": "G-8R86XR8P80",
+    "VITE_STRIPE_PUBLISHABLE_KEY": "pk_test_51Ry8eSEgwhW37oWxMvCuqxuOnuHbdJ1ZCUPMAKsYaFLmbF6G5adF6g30yk09nXNGBUhcUROkduIKULPzQywsE7u800irB6j1hu"
+  }
+}

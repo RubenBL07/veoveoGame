@@ -6,9 +6,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { ArrowLeft, Users, Zap } from 'lucide-react';
+import { ArrowLeft, Users, Zap, Crown, Globe } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import GameService from '@/lib/gameService';
 
 const CreateRoom = () => {
   const { user, loading: authLoading } = useAuth();
@@ -16,6 +17,11 @@ const CreateRoom = () => {
   const [loading, setLoading] = useState(false);
   const [maxPlayers, setMaxPlayers] = useState('5');
   const [aiMode, setAiMode] = useState('random');
+  const [roomType, setRoomType] = useState<'private' | 'public'>('private');
+  const [timePerRound, setTimePerRound] = useState('60');
+  const [language, setLanguage] = useState('es');
+  const [roomName, setRoomName] = useState('');
+  const [userProfile, setUserProfile] = useState<{ is_premium?: boolean; private_rooms_today?: number } | null>(null);
 
   // Redirect if not authenticated - IMMEDIATE redirect
   useEffect(() => {
@@ -23,6 +29,13 @@ const CreateRoom = () => {
       navigate('/auth', { replace: true });
     }
   }, [user, authLoading, navigate]);
+
+  // Fetch user profile
+  useEffect(() => {
+    if (user) {
+      GameService.getUserProfile(user.id).then(setUserProfile);
+    }
+  }, [user]);
 
   // Don't render anything if not authenticated
   if (authLoading) {
@@ -40,31 +53,6 @@ const CreateRoom = () => {
     return null; // Will redirect via useEffect
   }
 
-  const generateRoomCode = async () => {
-    let roomCode;
-    let isUnique = false;
-    
-    while (!isUnique) {
-      roomCode = Math.random().toString(36).substring(2, 8).toUpperCase();
-      
-      // Check if code already exists
-      const { data, error } = await supabase
-        .from('rooms')
-        .select('id')
-        .eq('room_code', roomCode)
-        .single();
-      
-      // If no room found with this code, it's unique
-      if (error && error.code === 'PGRST116') {
-        isUnique = true;
-      } else if (error) {
-        throw error;
-      }
-    }
-    
-    return roomCode;
-  };
-
   const handleCreateRoom = async () => {
     // Double check authentication before proceeding
     if (!user) {
@@ -72,41 +60,35 @@ const CreateRoom = () => {
       return;
     }
 
+    // Validate room name for public rooms
+    if (roomType === 'public' && (!roomName.trim() || roomName.trim().length > 25)) {
+      toast({
+        title: "Error",
+        description: "El nombre de la sala pública debe tener entre 1 y 25 caracteres",
+        variant: "destructive",
+      });
+      return;
+    }
+
     setLoading(true);
     try {
-      const roomCode = await generateRoomCode();
-      
-      // Create room
-      const { data: room, error: roomError } = await supabase
-        .from('rooms')
-        .insert({
-          host_id: user.id,
-          room_code: roomCode,
-          max_players: parseInt(maxPlayers),
-          ai_mode: aiMode,
-          status: 'waiting'
-        })
-        .select()
-        .single();
-
-      if (roomError) throw roomError;
-
-      // Add host as player
-      const { error: playerError } = await supabase
-        .from('room_players')
-        .insert({
-          room_id: room.id,
-          user_id: user.id
-        });
-
-      if (playerError) throw playerError;
-
-      toast({
-        title: "¡Sala creada!",
-        description: `Código de sala: ${roomCode}`,
+      const roomId = await GameService.createRoom({
+        hostId: user.id,
+        roomType: roomType,
+        maxPlayers: parseInt(maxPlayers),
+        aiMode: aiMode,
+        timePerRound: parseInt(timePerRound),
+        language: language,
+        roomName: roomType === 'public' ? roomName.trim() : null
       });
 
-      navigate(`/room/${room.id}`);
+      if (roomId) {
+        toast({
+          title: "¡Sala creada!",
+          description: roomType === 'private' ? "Comparte el código con tus amigos" : "Tu sala pública está disponible",
+        });
+        navigate(`/room/${roomId}`);
+      }
     } catch (error: unknown) {
       const errorMessage = error instanceof Error ? error.message : "Error al crear la sala";
       toast({
@@ -118,6 +100,9 @@ const CreateRoom = () => {
       setLoading(false);
     }
   };
+
+  const isPremium = userProfile?.is_premium;
+  const canCreatePrivate = userProfile ? (isPremium || userProfile.private_rooms_today < 3) : true;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-primary/10 to-secondary p-4">
@@ -138,6 +123,67 @@ const CreateRoom = () => {
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
+            {/* Room Type Selection */}
+            <div className="space-y-2">
+              <Label htmlFor="roomType">Tipo de Sala</Label>
+              <div className="grid grid-cols-2 gap-2">
+                <Button
+                  type="button"
+                  variant={roomType === 'private' ? 'default' : 'outline'}
+                  onClick={() => setRoomType('private')}
+                  className="flex items-center gap-2"
+                  disabled={!canCreatePrivate}
+                >
+                  <Users className="h-4 w-4" />
+                  Privada
+                  {!isPremium && userProfile && (
+                    <span className="text-xs bg-muted px-1 rounded">
+                      {userProfile.private_rooms_today}/3
+                    </span>
+                  )}
+                </Button>
+                <Button
+                  type="button"
+                  variant={roomType === 'public' ? 'default' : 'outline'}
+                  onClick={() => setRoomType('public')}
+                  className="flex items-center gap-2"
+                  disabled={!isPremium}
+                >
+                  <Globe className="h-4 w-4" />
+                  Pública
+                  {!isPremium && <Crown className="h-3 w-3" />}
+                </Button>
+              </div>
+              {!isPremium && roomType === 'public' && (
+                <p className="text-xs text-muted-foreground">
+                  Las salas públicas requieren suscripción Premium
+                </p>
+              )}
+              {!canCreatePrivate && roomType === 'private' && (
+                <p className="text-xs text-muted-foreground">
+                  Límite diario alcanzado. Actualiza a Premium para crear salas ilimitadas.
+                </p>
+              )}
+            </div>
+
+            {/* Room Name (Public only) */}
+            {roomType === 'public' && (
+              <div className="space-y-2">
+                <Label htmlFor="roomName">Nombre de la Sala</Label>
+                <Input
+                  id="roomName"
+                  value={roomName}
+                  onChange={(e) => setRoomName(e.target.value)}
+                  placeholder="Mi sala divertida"
+                  maxLength={25}
+                />
+                <p className="text-xs text-muted-foreground">
+                  {roomName.length}/25 caracteres
+                </p>
+              </div>
+            )}
+
+            {/* Max Players */}
             <div className="space-y-2">
               <Label htmlFor="maxPlayers">Máximo de Jugadores</Label>
               <Select value={maxPlayers} onValueChange={setMaxPlayers}>
@@ -145,14 +191,48 @@ const CreateRoom = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
+                  <SelectItem value="2">2 jugadores</SelectItem>
                   <SelectItem value="3">3 jugadores</SelectItem>
                   <SelectItem value="4">4 jugadores</SelectItem>
                   <SelectItem value="5">5 jugadores</SelectItem>
-                  <SelectItem value="6">6 jugadores</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
+            {/* Time Per Round */}
+            <div className="space-y-2">
+              <Label htmlFor="timePerRound">Tiempo por Ronda</Label>
+              <Select value={timePerRound} onValueChange={setTimePerRound}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="30">30 segundos</SelectItem>
+                  <SelectItem value="60">1 minuto</SelectItem>
+                  <SelectItem value="120">2 minutos</SelectItem>
+                  <SelectItem value="180">3 minutos</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Language */}
+            <div className="space-y-2">
+              <Label htmlFor="language">Idioma</Label>
+              <Select value={language} onValueChange={setLanguage}>
+                <SelectTrigger>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="es">Español</SelectItem>
+                  <SelectItem value="en">English</SelectItem>
+                  <SelectItem value="fr">Français</SelectItem>
+                  <SelectItem value="pt">Português</SelectItem>
+                  <SelectItem value="de">Deutsch</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* AI Mode */}
             <div className="space-y-2">
               <Label htmlFor="aiMode">Modo de IA</Label>
               <Select value={aiMode} onValueChange={setAiMode}>
@@ -160,8 +240,8 @@ const CreateRoom = () => {
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="random">Aleatorio</SelectItem>
-                  <SelectItem value="host_choice">Elección del Host</SelectItem>
+                  <SelectItem value="random">Automático</SelectItem>
+                  <SelectItem value="host_choice">Manual (Host elige)</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -172,15 +252,17 @@ const CreateRoom = () => {
                 <span className="font-semibold">¿Cómo funciona?</span>
               </div>
               <p className="text-sm text-muted-foreground">
-                La IA seleccionará objetos en las fotos según el modo elegido. 
-                ¡Los jugadores deben adivinar qué objeto "ve" la IA!
+                {aiMode === 'random' 
+                  ? 'La IA seleccionará automáticamente un objeto de la foto para que adivinen.'
+                  : 'Tú elegirás qué objeto de la lista detectada quieres que adivinen.'
+                }
               </p>
             </div>
 
             <Button 
               onClick={handleCreateRoom} 
               className="w-full game-button"
-              disabled={loading}
+              disabled={loading || (roomType === 'public' && !roomName.trim()) || (roomType === 'private' && !canCreatePrivate)}
             >
               {loading ? 'Creando...' : 'Crear Sala'}
             </Button>

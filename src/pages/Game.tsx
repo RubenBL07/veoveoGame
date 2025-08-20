@@ -11,6 +11,9 @@ import { useToast } from '@/hooks/use-toast';
 import { LoadingSpinner } from '@/components/LoadingSpinner';
 import { Camera, Upload, Eye, Trophy, Users, Clock } from 'lucide-react';
 import { aiService } from '@/lib/aiService';
+import GameService from '@/lib/gameService';
+import { CameraService } from '@/lib/cameraService';
+import { usePlatform } from '@/hooks/usePlatform';
 
 interface GameData {
   id: string;
@@ -64,6 +67,7 @@ const Game: React.FC = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { toast } = useToast();
+  const { isNative } = usePlatform();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -265,6 +269,41 @@ const Game: React.FC = () => {
     await uploadPhoto(file);
   };
 
+  const handleNativeCamera = async () => {
+    try {
+      // Verificar permisos
+      const hasPermission = await CameraService.checkPermissions();
+      if (!hasPermission) {
+        const granted = await CameraService.requestPermissions();
+        if (!granted) {
+          toast({
+            title: "Permisos requeridos",
+            description: "Necesitas permisos de cámara para jugar",
+            variant: "destructive"
+          });
+          return;
+        }
+      }
+
+      // Tomar foto
+      const photo = await CameraService.takePhoto();
+      
+      // Convertir base64 a Blob
+      const blob = CameraService.base64ToBlob(photo.base64, photo.format);
+      
+      // Subir foto
+      await uploadPhoto(blob);
+
+    } catch (error) {
+      console.error('Error with native camera:', error);
+      toast({
+        title: "Error de cámara",
+        description: "No se pudo tomar la foto",
+        variant: "destructive"
+      });
+    }
+  };
+
   const uploadPhoto = async (file: Blob) => {
     if (!user || !currentRound) return;
 
@@ -426,9 +465,12 @@ const Game: React.FC = () => {
 
         if (roundError) throw roundError;
 
+        // Award XP for correct guess
+        await GameService.awardXP(user.id, 100, 'Correct guess');
+
         toast({
           title: "¡Correcto!",
-          description: "¡Has adivinado el objeto!",
+          description: "¡Has adivinado el objeto! +100 XP",
         });
       }
 
@@ -449,13 +491,32 @@ const Game: React.FC = () => {
 
     try {
       if (gameData.current_round >= gameData.total_rounds) {
-        // Game finished
+        // Game finished - handle completion rewards
         const { error } = await supabase
           .from('games')
           .update({ status: 'finished' })
           .eq('id', gameId);
 
         if (error) throw error;
+
+        // Calculate game completion stats
+        const userScore = playerScores.find(p => p.user_id === user?.id)?.score || 0;
+        const maxScore = Math.max(...playerScores.map(p => p.score));
+        const won = userScore === maxScore && userScore > 0;
+        
+        const userGuesses = playerGuesses.filter(g => g.user_id === user?.id);
+        const correctGuesses = userGuesses.filter(g => g.is_correct).length;
+        
+        const userProfile = await GameService.getUserProfile(user?.id || '');
+        
+        // Handle game completion rewards
+        await GameService.handleGameCompletion(user?.id || '', {
+          won,
+          correctGuesses,
+          photosTaken: currentRound?.photographer_id === user?.id ? 1 : 0,
+          isPremium: userProfile?.is_premium || false
+        });
+
         return;
       }
 
@@ -574,10 +635,17 @@ const Game: React.FC = () => {
                       </p>
                       
                       <div className="flex gap-2">
-                        <Button onClick={startCamera} disabled={showCamera}>
-                          <Camera className="h-4 w-4 mr-2" />
-                          Usar cámara
-                        </Button>
+                        {isNative ? (
+                          <Button onClick={handleNativeCamera} disabled={uploading}>
+                            <Camera className="h-4 w-4 mr-2" />
+                            {uploading ? 'Procesando...' : 'Tomar foto'}
+                          </Button>
+                        ) : (
+                          <Button onClick={startCamera} disabled={showCamera}>
+                            <Camera className="h-4 w-4 mr-2" />
+                            Usar cámara
+                          </Button>
+                        )}
                         <Button 
                           variant="outline" 
                           onClick={() => fileInputRef.current?.click()}
