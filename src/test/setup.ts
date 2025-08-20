@@ -1,13 +1,30 @@
 import '@testing-library/jest-dom';
 
-// Mock de localStorage
+// Mock de localStorage con manejo de JSON
+let mockStorage: Record<string, string> = {
+  'veoveo_theme': 'default',
+  'veoveo_custom_themes': '[]',
+};
+
 const localStorageMock = {
-  getItem: vi.fn(),
-  setItem: vi.fn(),
-  removeItem: vi.fn(),
-  clear: vi.fn(),
-  length: 0,
-  key: vi.fn(),
+  getItem: vi.fn((key: string) => {
+    return mockStorage[key] || null;
+  }),
+  setItem: vi.fn((key: string, value: string) => {
+    mockStorage[key] = value;
+    console.log(`localStorage.setItem(${key}, ${value})`);
+  }),
+  removeItem: vi.fn((key: string) => {
+    delete mockStorage[key];
+  }),
+  clear: vi.fn(() => {
+    mockStorage = {};
+  }),
+  length: Object.keys(mockStorage).length,
+  key: vi.fn((index: number) => {
+    const keys = Object.keys(mockStorage);
+    return keys[index] || null;
+  }),
 };
 global.localStorage = localStorageMock;
 

@@ -16,7 +16,12 @@ describe('ThemeService', () => {
     });
 
     it('should return saved theme from localStorage', () => {
-      (localStorage.getItem as any).mockReturnValue('dark');
+      // Configurar el mock para devolver 'dark' para el tema y '[]' para custom themes
+      (localStorage.getItem as any).mockImplementation((key: string) => {
+        if (key === 'veoveo_theme') return 'dark';
+        if (key === 'veoveo_custom_themes') return '[]';
+        return null;
+      });
       const theme = ThemeService.getCurrentTheme();
       expect(theme.id).toBe('dark');
       expect(theme.name).toBe('Oscuro');
@@ -62,7 +67,11 @@ describe('ThemeService', () => {
         }
       };
 
-      (localStorage.getItem as any).mockReturnValue(JSON.stringify([customTheme]));
+      (localStorage.getItem as any).mockImplementation((key: string) => {
+        if (key === 'veoveo_theme') return 'default';
+        if (key === 'veoveo_custom_themes') return JSON.stringify([customTheme]);
+        return null;
+      });
       const themes = ThemeService.getAllThemes();
       
       expect(themes.length).toBe(DEFAULT_THEMES.length + 1);

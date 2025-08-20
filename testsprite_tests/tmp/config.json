@@ -1,16 +1,7 @@
 {
-  "status": "init",
+  "status": "commited",
+  "type": "backend",
   "scope": "codebase",
-  "type": "frontend",
-  "localEndpoint": "http://localhost:8083",
-  "serverPort": 58771,
-  "executionArgs": {
-    "projectName": "veoveoGame",
-    "projectPath": "C:\\Users\\ruben\\Downloads\\veo-veo-vision-main",
-    "testIds": [],
-    "additionalInstruction": "Realizar un debug completo de la aplicación, identificar todos los errores y fallos, incluyendo problemas de TypeScript, errores de runtime, problemas de UI/UX, y verificar que todas las funcionalidades implementadas funcionen correctamente",
-    "envs": {
-      "API_KEY": ""
-    }
-  }
+  "localEndpoint": "http://localhost:8080",
+  "backendAuthType": "public"
 }

@@ -19,6 +19,9 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  optimizeDeps: {
+    exclude: ['gtag'], // Excluir gtag de la optimización de dependencias
+  },
   build: {
     rollupOptions: {
       output: {
