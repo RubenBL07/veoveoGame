@@ -1,0 +1,15 @@
+{
+  "timestamp": "2025-08-20T13:25:38.743Z",
+  "allPassed": true,
+  "results": {
+    "criticalFiles": true,
+    "security": true,
+    "icons": true,
+    "docs": true,
+    "scripts": true,
+    "dirs": true,
+    "env": true,
+    "packageScripts": true
+  },
+  "version": "0.0.0"
+}

@@ -13,15 +13,54 @@ const config: CapacitorConfig = {
       launchShowDuration: 2000,
       backgroundColor: "#1a1a1a",
       showSpinner: true,
-      spinnerColor: "#6366f1"
+      spinnerColor: "#6366f1",
+      androidSpinnerStyle: "large",
+      iosSpinnerStyle: "large",
+      spinnerColor: "#6366f1",
+      splashFullScreen: true,
+      splashImmersive: true
     },
     StatusBar: {
       style: 'dark',
-      backgroundColor: '#1a1a1a'
+      backgroundColor: '#1a1a1a',
+      overlaysWebView: false
     },
     Camera: {
-      androidScaleType: 'CENTER_CROP'
+      androidScaleType: 'CENTER_CROP',
+      quality: 90,
+      allowEditing: false,
+      resultType: 'DATA_URL'
+    },
+    App: {
+      url: 'https://veoveogame-7kltsg701-ruben261205-9060s-projects.vercel.app',
+      appId: 'com.veoveovision.app',
+      appName: 'Veo Veo Vision',
+      webDir: 'dist',
+      bundledWebRuntime: false
+    },
+    Device: {
+      language: 'es',
+      locale: 'es-ES'
+    },
+    Haptics: {
+      enabled: true
+    },
+    Network: {
+      enabled: true
     }
+  },
+  ios: {
+    scheme: 'VeoVeoVision',
+    contentInset: 'automatic',
+    backgroundColor: '#1a1a1a',
+    limitsNavigationsToAppBoundDomains: true
+  },
+  android: {
+    scheme: 'veoveovision',
+    backgroundColor: '#1a1a1a',
+    allowMixedContent: false,
+    captureInput: true,
+    webContentsDebuggingEnabled: false
   }
 };
 

@@ -17,7 +17,14 @@
     "cap:sync": "npx cap sync",
     "cap:build": "npm run build && npx cap sync",
     "cap:android": "npx cap open android",
-    "cap:ios": "npx cap open ios"
+    "cap:ios": "npx cap open ios",
+    "build:stores": "node scripts/build-for-stores.cjs",
+    "security:configure": "node scripts/configure-security.cjs",
+    "icons:generate": "node scripts/generate-icons.cjs",
+    "stores:verify": "node scripts/verify-app-store-readiness.cjs",
+    "stores:prepare": "npm run security:configure && npm run icons:generate && npm run build:stores",
+    "stores:android": "npm run build && npx cap sync && npx cap build android",
+    "stores:ios": "npm run build && npx cap sync && npx cap build ios"
   },
   "dependencies": {
     "@capacitor/android": "^7.4.2",

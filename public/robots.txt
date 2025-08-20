@@ -1,14 +1,17 @@
-User-agent: Googlebot
-Allow: /
-
-User-agent: Bingbot
-Allow: /
-
-User-agent: Twitterbot
-Allow: /
-
-User-agent: facebookexternalhit
-Allow: /
-
+# Robots.txt para Veo Veo Vision
 User-agent: *
 Allow: /
+
+# Permitir indexación de páginas públicas
+Allow: /public-rooms
+Allow: /leaderboards
+
+# Bloquear páginas privadas
+Disallow: /room/
+Disallow: /game/
+Disallow: /profile
+Disallow: /friends
+Disallow: /premium
+
+# Sitemap
+Sitemap: https://tu-dominio.com/sitemap.xml

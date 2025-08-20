@@ -8,10 +8,12 @@ import { GoogleAnalytics } from "@/components/GoogleAnalytics";
 import { useAnalytics } from "@/hooks/useAnalytics";
 import { ThemeService } from "@/lib/themeService";
 import { OfflineService } from "@/lib/offlineService";
-import React, { Suspense, lazy } from "react";
+import React, { Suspense, lazy, useState } from "react";
 import Index from "./pages/Index";
 import Auth from "./pages/Auth";
 import NotFound from "./pages/NotFound";
+import PrivacyBanner from "@/components/PrivacyBanner";
+import { PrivacyConsent } from "@/components/PrivacyConsent";
 
 // Lazy loading para componentes pesados
 const CreateRoom = lazy(() => import("./pages/CreateRoom"));
@@ -28,6 +30,8 @@ const Leaderboards = lazy(() => import("./pages/Leaderboards"));
 const queryClient = new QueryClient();
 
 const App = () => {
+  const [privacyConsent, setPrivacyConsent] = useState<PrivacyConsent | null>(null);
+
   // Inicializar servicios al cargar la app
   React.useEffect(() => {
     // Inicializar tema
@@ -41,6 +45,14 @@ const App = () => {
       OfflineService.syncOfflineData();
     }
   }, []);
+
+  const handlePrivacyConsent = (consent: PrivacyConsent) => {
+    setPrivacyConsent(consent);
+    // Aquí puedes configurar analytics basado en el consentimiento
+    if (consent.analytics) {
+      // Habilitar analytics
+    }
+  };
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -73,6 +85,7 @@ const App = () => {
               </Routes>
             </Suspense>
           </BrowserRouter>
+          <PrivacyBanner onConsentComplete={handlePrivacyConsent} />
         </TooltipProvider>
       </AuthProvider>
     </QueryClientProvider>
