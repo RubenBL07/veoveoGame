@@ -1,0 +1,180 @@
+{
+  "tech_stack": [
+    "TypeScript",
+    "React 18",
+    "Vite",
+    "Tailwind CSS",
+    "shadcn/ui",
+    "Supabase",
+    "PostgreSQL",
+    "OpenAI GPT-4 Vision",
+    "Stripe",
+    "Capacitor",
+    "Google Analytics",
+    "React Query",
+    "React Router DOM",
+    "Vitest"
+  ],
+  "features": [
+    {
+      "name": "Authentication System",
+      "description": "Complete user authentication with Supabase Auth, email verification, and profile management",
+      "files": [
+        "src/hooks/useAuth.tsx",
+        "src/pages/Auth.tsx",
+        "src/pages/EmailConfirmation.tsx",
+        "src/integrations/supabase/client.ts",
+        "src/integrations/supabase/types.ts"
+      ]
+    },
+    {
+      "name": "Game Core Logic",
+      "description": "Main game mechanics including photo capture, AI object detection, guessing system, and scoring",
+      "files": [
+        "src/pages/Game.tsx",
+        "src/lib/aiService.ts",
+        "src/lib/gameService.ts",
+        "src/components/LoadingSpinner.tsx"
+      ]
+    },
+    {
+      "name": "Room Management",
+      "description": "Create and join game rooms, manage players, and handle room states",
+      "files": [
+        "src/pages/CreateRoom.tsx",
+        "src/pages/JoinRoom.tsx",
+        "src/pages/Room.tsx",
+        "src/pages/PublicRooms.tsx"
+      ]
+    },
+    {
+      "name": "Social Features",
+      "description": "Friends system, real-time chat, and social interactions",
+      "files": [
+        "src/pages/Friends.tsx",
+        "src/components/Chat.tsx",
+        "src/hooks/use-mobile.tsx"
+      ]
+    },
+    {
+      "name": "Gamification System",
+      "description": "XP, levels, achievements, daily challenges, and leaderboards",
+      "files": [
+        "src/pages/Leaderboards.tsx",
+        "src/pages/Profile.tsx",
+        "src/lib/gameService.ts"
+      ]
+    },
+    {
+      "name": "Premium & Payment System",
+      "description": "Stripe integration, subscription management, and premium features",
+      "files": [
+        "src/pages/Premium.tsx",
+        "src/lib/paymentService.ts"
+      ]
+    },
+    {
+      "name": "Mobile Native App",
+      "description": "Capacitor integration for native mobile functionality",
+      "files": [
+        "capacitor.config.ts",
+        "src/lib/cameraService.ts",
+        "src/hooks/usePlatform.ts",
+        "android/",
+        "ios/"
+      ]
+    },
+    {
+      "name": "Offline Mode",
+      "description": "Local storage, offline functionality, and data synchronization",
+      "files": [
+        "src/lib/offlineService.ts"
+      ]
+    },
+    {
+      "name": "Theme System",
+      "description": "Customizable visual themes with premium themes and theme generation",
+      "files": [
+        "src/lib/themeService.ts",
+        "src/lib/__tests__/themeService.test.ts"
+      ]
+    },
+    {
+      "name": "Tournament System",
+      "description": "Tournament creation, participation, and management",
+      "files": [
+        "src/lib/tournamentService.ts"
+      ]
+    },
+    {
+      "name": "Analytics Integration",
+      "description": "Google Analytics tracking for user behavior and game metrics",
+      "files": [
+        "src/hooks/useAnalytics.ts",
+        "src/components/GoogleAnalytics.tsx",
+        "src/components/AnalyticsWrapper.tsx"
+      ]
+    },
+    {
+      "name": "UI Components",
+      "description": "Comprehensive UI component library using shadcn/ui",
+      "files": [
+        "src/components/ui/",
+        "src/components/Avatar.tsx"
+      ]
+    },
+    {
+      "name": "Testing Framework",
+      "description": "Unit testing setup with Vitest and React Testing Library",
+      "files": [
+        "vitest.config.ts",
+        "src/test/setup.ts",
+        "src/lib/__tests__/themeService.test.ts"
+      ]
+    },
+    {
+      "name": "Database Schema",
+      "description": "Complete PostgreSQL database schema with RLS policies and functions",
+      "files": [
+        "supabase/migrations/",
+        "supabase/config.toml"
+      ]
+    },
+    {
+      "name": "Deployment Configuration",
+      "description": "Vercel deployment and environment configuration",
+      "files": [
+        "vercel.json",
+        ".env.local",
+        "package.json",
+        "vite.config.ts"
+      ]
+    },
+    {
+      "name": "Main Application",
+      "description": "Core application setup, routing, and global state management",
+      "files": [
+        "src/App.tsx",
+        "src/main.tsx",
+        "src/index.css",
+        "src/App.css"
+      ]
+    },
+    {
+      "name": "Utility Services",
+      "description": "Helper functions and utility services",
+      "files": [
+        "src/lib/utils.ts"
+      ]
+    },
+    {
+      "name": "Documentation",
+      "description": "Project documentation and guides",
+      "files": [
+        "README.md",
+        "PRD_VeoVeoVision_Completo.md",
+        "FINAL_DEVELOPMENT_SUMMARY.md"
+      ]
+    }
+  ]
+}

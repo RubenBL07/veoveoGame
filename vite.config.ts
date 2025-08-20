@@ -19,4 +19,19 @@ export default defineConfig(({ mode }) => ({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          // Separar vendor libraries
+          vendor: ['react', 'react-dom'],
+          router: ['react-router-dom'],
+          ui: ['@radix-ui/react-dialog', '@radix-ui/react-dropdown-menu', '@radix-ui/react-toast'],
+          supabase: ['@supabase/supabase-js'],
+          stripe: ['@stripe/stripe-js'],
+        },
+      },
+    },
+    chunkSizeWarningLimit: 1000, // Aumentar límite temporalmente
+  },
 }));
