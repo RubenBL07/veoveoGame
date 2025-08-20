@@ -8,17 +8,6 @@
       "destination": "/index.html"
     }
   ],
-  "headers": [
-    {
-      "source": "/assets/(.*)",
-      "headers": [
-        {
-          "key": "Cache-Control",
-          "value": "public, max-age=31536000, immutable"
-        }
-      ]
-    }
-  ],
   "env": {
     "VITE_SUPABASE_URL": "https://jfwhgjojlmltcbplnbrm.supabase.co",
     "VITE_SUPABASE_ANON_KEY": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Impmd2hnam9qbG1sdGNicGxuYnJtIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQ2NTk1MzUsImV4cCI6MjA3MDIzNTUzNX0.VFNjEW735pG1iNwQnj5XAQeNvxtxjWBMba7e8VtID-8",

@@ -6,7 +6,7 @@ const config: CapacitorConfig = {
   webDir: 'dist',
   server: {
     androidScheme: 'https',
-    url: 'https://veoveogame-7kltsg701-ruben261205-9060s-projects.vercel.app'
+    url: 'https://veoveo-game-oozlt114e-ruben261205-9060s-projects.vercel.app'
   },
   plugins: {
     SplashScreen: {
@@ -16,7 +16,6 @@ const config: CapacitorConfig = {
       spinnerColor: "#6366f1",
       androidSpinnerStyle: "large",
       iosSpinnerStyle: "large",
-      spinnerColor: "#6366f1",
       splashFullScreen: true,
       splashImmersive: true
     },
@@ -32,7 +31,7 @@ const config: CapacitorConfig = {
       resultType: 'DATA_URL'
     },
     App: {
-      url: 'https://veoveogame-7kltsg701-ruben261205-9060s-projects.vercel.app',
+      url: 'https://veoveo-game-oozlt114e-ruben261205-9060s-projects.vercel.app',
       appId: 'com.veoveo.app',
       appName: 'Veo Veo',
       webDir: 'dist',
@@ -50,13 +49,11 @@ const config: CapacitorConfig = {
     }
   },
   ios: {
-    scheme: 'VeoVeo',
     contentInset: 'automatic',
     backgroundColor: '#1a1a1a',
     limitsNavigationsToAppBoundDomains: true
   },
   android: {
-    scheme: 'veoveo',
     backgroundColor: '#1a1a1a',
     allowMixedContent: false,
     captureInput: true,
