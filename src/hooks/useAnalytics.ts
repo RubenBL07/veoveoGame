@@ -93,7 +93,7 @@ export const initializeAnalytics = () => {
     }
     gtag('js', new Date());
     gtag('config', process.env.VITE_GOOGLE_ANALYTICS_ID, {
-      page_title: 'Veo Veo Vision',
+      page_title: 'Veo Veo',
       page_location: window.location.href,
     });
     

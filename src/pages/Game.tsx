@@ -595,7 +595,7 @@ const Game: React.FC = () => {
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2">
                 <Eye className="h-6 w-6" />
-                Veo Veo Vision
+                Veo Veo
               </CardTitle>
               <div className="flex items-center gap-4">
                 <Badge variant="outline" className="flex items-center gap-1">

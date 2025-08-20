@@ -1,10 +1,10 @@
-# Veo Veo Vision - AI-Powered Multiplayer Game
+# Veo Veo - AI-Powered Multiplayer Game
 
 Un juego multijugador moderno que recrea el clásico "Veo Veo" utilizando inteligencia artificial para detección de objetos en fotografías en tiempo real. Disponible como **aplicación web** y **app móvil nativa** para Android e iOS.
 
 ## 📱 **App Móvil Nativa**
 
-¡Veo Veo Vision ahora está disponible como app móvil nativa! 
+¡Veo Veo ahora está disponible como app móvil nativa! 
 
 ### ✅ **Características de la App Móvil:**
 - **Cámara nativa** con acceso directo al hardware
@@ -295,4 +295,4 @@ Este proyecto está bajo la Licencia MIT. Ver el archivo `LICENSE` para más det
 
 ---
 
-**¡Disfruta jugando Veo Veo Vision! 🎮✨**
+**¡Disfruta jugando Veo Veo! 🎮✨**

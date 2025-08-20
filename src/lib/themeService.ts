@@ -19,7 +19,7 @@ export const DEFAULT_THEMES: Theme[] = [
   {
     id: 'default',
     name: 'Clásico',
-    description: 'Tema original de Veo Veo Vision',
+    description: 'Tema original de Veo Veo',
     isDefault: true,
     colors: {
       primary: '#6366f1',

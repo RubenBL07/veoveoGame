@@ -1,4 +1,4 @@
-# 🎉 **DESARROLLO COMPLETADO - Veo Veo Vision**
+# 🎉 **DESARROLLO COMPLETADO - Veo Veo**
 
 ## ✅ **FUNCIONALIDADES IMPLEMENTADAS**
 
@@ -194,7 +194,7 @@ npm run cap:ios      # Abrir Xcode (solo macOS)
 
 ## 🎉 **CONCLUSIÓN**
 
-**Veo Veo Vision** está **100% completo** y listo para producción. El proyecto incluye:
+**Veo Veo** está **100% completo** y listo para producción. El proyecto incluye:
 
 - ✅ **Funcionalidad completa** de juego multijugador
 - ✅ **App móvil nativa** para Android e iOS

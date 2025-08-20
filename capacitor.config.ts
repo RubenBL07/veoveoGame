@@ -1,8 +1,8 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.veoveovision.app',
-  appName: 'Veo Veo Vision',
+  appId: 'com.veoveo.app',
+  appName: 'Veo Veo',
   webDir: 'dist',
   server: {
     androidScheme: 'https',
@@ -33,8 +33,8 @@ const config: CapacitorConfig = {
     },
     App: {
       url: 'https://veoveogame-7kltsg701-ruben261205-9060s-projects.vercel.app',
-      appId: 'com.veoveovision.app',
-      appName: 'Veo Veo Vision',
+      appId: 'com.veoveo.app',
+      appName: 'Veo Veo',
       webDir: 'dist',
       bundledWebRuntime: false
     },
@@ -50,13 +50,13 @@ const config: CapacitorConfig = {
     }
   },
   ios: {
-    scheme: 'VeoVeoVision',
+    scheme: 'VeoVeo',
     contentInset: 'automatic',
     backgroundColor: '#1a1a1a',
     limitsNavigationsToAppBoundDomains: true
   },
   android: {
-    scheme: 'veoveovision',
+    scheme: 'veoveo',
     backgroundColor: '#1a1a1a',
     allowMixedContent: false,
     captureInput: true,
