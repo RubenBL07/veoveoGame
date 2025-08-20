@@ -1,15 +1,17 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { ArrowLeft, Crown, Globe, Trophy, Users, Star, Check } from 'lucide-react';
+import { ArrowLeft, Crown, Globe, Trophy, Users, Star, Check, Loader2 } from 'lucide-react';
 import { toast } from '@/hooks/use-toast';
+import { PaymentService, SUBSCRIPTION_PLANS } from '@/lib/paymentService';
 
 const Premium = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+  const [loading, setLoading] = useState<string | null>(null);
 
   const features = [
     {
@@ -44,12 +46,29 @@ const Premium = () => {
     }
   ];
 
-  const handleSubscribe = () => {
-    // TODO: Implement payment processing
-    toast({
-      title: "Funcionalidad en desarrollo",
-      description: "La suscripción Premium estará disponible próximamente",
-    });
+  const handleSubscribe = async (planId: string) => {
+    if (!user) {
+      toast({
+        title: "Error",
+        description: "Debes iniciar sesión para suscribirte",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    setLoading(planId);
+    try {
+      await PaymentService.redirectToCheckout(planId, user.id);
+    } catch (error) {
+      console.error('Error subscribing:', error);
+      toast({
+        title: "Error",
+        description: "No se pudo procesar la suscripción",
+        variant: "destructive",
+      });
+    } finally {
+      setLoading(null);
+    }
   };
 
   const handleBack = () => {
@@ -81,38 +100,58 @@ const Premium = () => {
           </p>
         </div>
 
-        {/* Pricing Card */}
-        <div className="max-w-md mx-auto mb-12">
-          <Card className="game-card border-2 border-yellow-400 relative overflow-hidden">
-            <div className="absolute top-0 right-0 bg-gradient-to-br from-yellow-400 to-orange-500 text-black px-4 py-1 text-sm font-bold rounded-bl-lg">
-              MÁS POPULAR
-            </div>
-            <CardHeader className="text-center pb-4">
-              <CardTitle className="text-2xl font-black">Premium Mensual</CardTitle>
-              <div className="flex items-baseline justify-center gap-2">
-                <span className="text-4xl font-black">$2.99</span>
-                <span className="text-muted-foreground">/mes</span>
-              </div>
-              <p className="text-sm text-muted-foreground">
-                Cancelación en cualquier momento
-              </p>
-            </CardHeader>
-            <CardContent className="space-y-6">
-              <Button 
-                onClick={handleSubscribe}
-                className="w-full game-button bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-black py-4 text-lg"
-              >
-                <Crown className="h-5 w-5 mr-2" />
-                Suscribirse Ahora
-              </Button>
-              
-              <div className="text-center">
+        {/* Pricing Cards */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
+          {SUBSCRIPTION_PLANS.map((plan) => (
+            <Card key={plan.id} className={`game-card relative overflow-hidden ${
+              plan.id === 'premium-monthly' ? 'border-2 border-yellow-400' : 'border border-border'
+            }`}>
+              {plan.id === 'premium-monthly' && (
+                <div className="absolute top-0 right-0 bg-gradient-to-br from-yellow-400 to-orange-500 text-black px-4 py-1 text-sm font-bold rounded-bl-lg">
+                  MÁS POPULAR
+                </div>
+              )}
+              <CardHeader className="text-center pb-4">
+                <CardTitle className="text-2xl font-black">{plan.name}</CardTitle>
+                <div className="flex items-baseline justify-center gap-2">
+                  <span className="text-4xl font-black">€{plan.price}</span>
+                  <span className="text-muted-foreground">/{plan.interval === 'month' ? 'mes' : 'año'}</span>
+                </div>
                 <p className="text-sm text-muted-foreground">
-                  Prueba gratuita de 7 días incluida
+                  Cancelación en cualquier momento
                 </p>
-              </div>
-            </CardContent>
-          </Card>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                <div className="space-y-3">
+                  {plan.features.map((feature, index) => (
+                    <div key={index} className="flex items-center gap-3">
+                      <Check className="h-4 w-4 text-green-500 flex-shrink-0" />
+                      <span className="text-sm">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+                
+                <Button 
+                  onClick={() => handleSubscribe(plan.id)}
+                  disabled={loading === plan.id}
+                  className="w-full game-button bg-gradient-to-r from-yellow-400 to-orange-500 hover:from-yellow-500 hover:to-orange-600 text-black font-black py-4 text-lg"
+                >
+                  {loading === plan.id ? (
+                    <Loader2 className="h-5 w-5 mr-2 animate-spin" />
+                  ) : (
+                    <Crown className="h-5 w-5 mr-2" />
+                  )}
+                  {loading === plan.id ? 'Procesando...' : 'Suscribirse Ahora'}
+                </Button>
+                
+                <div className="text-center">
+                  <p className="text-sm text-muted-foreground">
+                    {plan.id === 'premium-yearly' ? '2 meses gratis incluidos' : 'Prueba gratuita de 7 días incluida'}
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
+          ))}
         </div>
 
         {/* Features Grid */}
